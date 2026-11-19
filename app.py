@@ -9,7 +9,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
 from pathlib import Path
-from flask import Flask, g, render_template, request, redirect, url_for, flash, abort
+from flask import Flask, g, render_template, request, redirect, url_for, flash, abort, session
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
