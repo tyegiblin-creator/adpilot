@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Add campaign · AdPilot{% endblock %}
+{% block content %}
+<section class="form-wrap">
+  <a class="back-link" href="{{ url_for('dashboard') }}">← Back to overview</a>
+  <div class="eyebrow">CAMPAIGN SETUP</div><h1>Add a campaign</h1><p class="form-intro">Enter the figures from your advertising platform. You can update them as performance changes.</p>
+  <form method="post" class="campaign-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Campaign name<input name="name" maxlength="100" required placeholder="e.g. Summer product launch"></label>
+    <label>Advertising platform<select name="platform" required><option value="">Choose a platform</option><option>Meta Ads</option><option>Google Ads</option><option>TikTok Ads</option><option>LinkedIn Ads</option><option>Other</option></select></label>
+    <div class="form-divider">PERFORMANCE METRICS</div>
+    <div class="form-grid">
+      <label>Ad spend (£)<input type="number" name="spend" min="0" step="0.01" value="0" required></label>
+      <label>Revenue (£)<input type="number" name="revenue" min="0" step="0.01" value="0" required></label>
+      <label>Impressions<input type="number" name="impressions" min="0" step="1" value="0" required></label>
+      <label>Clicks<input type="number" name="clicks" min="0" step="1" value="0" required></label>
+      <label>Conversions<input type="number" name="conversions" min="0" step="1" value="0" required></label>
+    </div>
+    <button class="button submit-button" type="submit">Save campaign →</button>
+  </form>
+</section>
+{% endblock %}

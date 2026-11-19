@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Overview · AdPilot{% endblock %}
+{% block content %}
+<section class="welcome">
+  <div><div class="eyebrow">PERFORMANCE SNAPSHOT</div><h1>Know what’s <span>working.</span></h1><p>One clear view of your advertising performance.</p></div>
+  <div class="welcome-orb">↗</div>
+</section>
+
+<section class="stats-grid">
+  <article class="stat-card"><div class="stat-label">TOTAL AD SPEND</div><div class="stat-value">£{{ "%.2f"|format(summary.spend) }}</div><div class="stat-foot">Across all campaigns</div></article>
+  <article class="stat-card"><div class="stat-label">REVENUE</div><div class="stat-value">£{{ "%.2f"|format(summary.revenue) }}</div><div class="stat-foot">Reported campaign revenue</div></article>
+  <article class="stat-card"><div class="stat-label">RETURN ON AD SPEND</div><div class="stat-value">{{ "%.2f"|format(summary.roas) }}x</div><div class="stat-foot">Revenue ÷ ad spend</div></article>
+  <article class="stat-card"><div class="stat-label">CONVERSIONS</div><div class="stat-value">{{ summary.conversions }}</div><div class="stat-foot">Total recorded conversions</div></article>
+</section>
+
+<section class="panel">
+  <div class="panel-heading"><div><div class="eyebrow">YOUR DATA</div><h2>Campaign performance</h2></div><a class="text-link" href="{{ url_for('new_campaign') }}">Add new ↗</a></div>
+  {% if campaigns %}
+  <div class="table-wrap"><table><thead><tr><th>CAMPAIGN</th><th>PLATFORM</th><th>SPEND</th><th>CTR</th><th>CPC</th><th>ROAS</th><th></th></tr></thead><tbody>
+  {% for c in campaigns %}
+  <tr><td class="campaign-name">{{ c.name }}</td><td><span class="platform">{{ c.platform }}</span></td><td>£{{ "%.2f"|format(c.spend) }}</td><td>{{ "%.2f"|format(c.ctr) }}%</td><td>£{{ "%.2f"|format(c.cpc) }}</td><td><span class="roas-pill">{{ "%.2f"|format(c.roas) }}x</span></td><td><form method="post" action="{{ url_for('delete_campaign', campaign_id=c.id) }}" onsubmit="return confirm('Delete this campaign?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="delete-button" aria-label="Delete campaign">×</button></form></td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">↗</div><h3>Your first campaign starts here</h3><p>Add campaign metrics to see your CTR, CPC, CPA and return on ad spend.</p><a class="button" href="{{ url_for('new_campaign') }}">＋ Add your first campaign</a></div>
+  {% endif %}
+</section>
+<div class="note"><strong>Prototype note</strong><span>Metrics are manually entered in this first version. Advertising-platform integrations and automatic data syncing are planned for a later release.</span></div>
+{% endblock %}

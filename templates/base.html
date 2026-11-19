@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d">
+  <title>{% block title %}AdPilot{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">A</span><span>adpilot</span></a>
+      <div class="side-label">WORKSPACE</div>
+      <a class="nav-link active" href="{{ url_for('dashboard') }}">▦ <span>Overview</span></a>
+      <a class="nav-link" href="{{ url_for('new_campaign') }}">＋ <span>Add campaign</span></a>
+      <a class="nav-link" href="{{ url_for('integrations') }}">⌁ <span>Integrations</span></a>
+      <div class="sidebar-bottom"><span class="status-dot"></span> Prototype environment</div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">AD PERFORMANCE WORKSPACE</div><div class="top-title">Your campaigns</div></div>
+        <a class="button button-small" href="{{ url_for('new_campaign') }}">＋ Add campaign</a>
+      </header>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer>ADPILOT <span>·</span> EARLY ACCESS PROTOTYPE</footer>
+    </main>
+  </div>
+</body>
+</html>

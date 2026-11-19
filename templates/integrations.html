@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Integrations · AdPilot{% endblock %}
+{% block content %}
+<section class="welcome">
+  <div><div class="eyebrow">CONNECTED DATA SOURCES</div><h1>Bring your ads <span>together.</span></h1><p>Connect Meta Ads and import real campaign performance.</p></div>
+  <div class="welcome-orb">⌁</div>
+</section>
+<div class="integration-grid">
+{% for p in providers %}
+  <article class="integration-card">
+    <div class="integration-card-top"><div class="provider-symbol">{% if p.key == 'meta' %}M{% elif p.key == 'google' %}G{% else %}T{% endif %}</div><span class="integration-status {% if p.status == 'connected' %}connected{% else %}pending{% endif %}">{% if p.status == 'connected' %}Connected{% elif p.configured %}Credentials ready{% else %}Setup required{% endif %}</span></div>
+    <h2>{{ p.name }}</h2><p>{{ p.description }}</p>
+    {% if p.key == 'meta' %}
+      {% if p.configured %}<div class="integration-meta">Meta developer credentials configured</div>{% else %}<div class="integration-meta">Add Meta developer credentials to enable OAuth</div>{% endif %}
+      <form method="post" action="{{ url_for('connect_integration', provider_key='meta') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button integration-button" type="submit">{% if p.token_available %}Reconnect Meta account{% else %}Connect Meta Ads{% endif %} →</button></form>
+      {% if p.accounts %}
+      <form method="post" action="{{ url_for('select_meta_account') }}" class="account-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="account_id">Choose advertising account</label>
+        <select id="account_id" name="account_id" required>{% for a in p.accounts %}<option value="{{ a.account_id }}" {% if a.selected %}selected{% endif %}>{{ a.name }} · {{ a.currency or 'Currency n/a' }}</option>{% endfor %}</select>
+        <button class="button button-small" type="submit">Save account</button>
+      </form>
+      {% endif %}
+      {% if p.token_available %}
+      <form method="post" action="{{ url_for('sync_meta_campaigns') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button integration-button" type="submit">Sync last 30 days ↻</button></form>
+      <form method="post" action="{{ url_for('disconnect_meta') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="disconnect-button" type="submit">Disconnect Meta</button></form>
+      {% endif %}
+    {% else %}
+      <div class="integration-meta">Planned integration — not available in this build</div>
+      <button class="button integration-button" type="button" disabled>Coming in a later release</button>
+    {% endif %}
+    <a class="provider-docs" href="{{ p.docs }}" target="_blank" rel="noopener noreferrer">Official developer documentation ↗</a>
+  </article>
+{% endfor %}
+</div>
+<div class="note"><strong>Read-only access</strong><span>AdPilot requests the ads_read permission and imports campaign-level reporting. It does not create, edit, pause or delete advertisements. Purchases and purchase value depend on conversion events being reported by Meta.</span></div>
+{% endblock %}
